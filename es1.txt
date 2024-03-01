@@ -1,0 +1,34 @@
+//return ip
+
+//https://api.ipify.org/
+
+import "package:http/http.dart" as http;
+import "dart:convert";
+
+const stringUrl = "https://api.ipify.org?format=json";
+
+//con async rendo il metodo asincrono. Le Future raccolgono i dati asincroni
+//Future<String> -> dichiarazione di una funzione asincrona che restituisce un valore di tipo String.
+//getIp() -> funzione che restituisce un oggetto di tipo Ip.
+Future<Ip> getIp() async {
+  //prende url fornito e lo trasforma in un oggetto(Uri) utilizzabile 
+  final url = Uri.parse(stringUrl);
+  // await aspetta finché non si risolve la richiesta
+  final res = await http.get(url);
+  // nel body c'è il json che vogliamo decodificare, con json.decode faccio la decodifica
+  // definisce una map <key, value>
+  final Map<String, dynamic> data = json.decode(res.body);
+
+  return Ip(ip: data["ip"]); 
+}
+//faccio una classe nella quale creo una property ip e la definisco required
+class Ip {
+  String ip;
+  Ip({required this.ip});
+  //quando in questo oggetto viene richiamato il metodo toString(ogni volta che viene fatto print) fai return dell'ip
+  @override
+  String toString() {
+    
+    return "My ip is: $ip";
+  }
+}
